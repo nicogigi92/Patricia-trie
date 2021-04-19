@@ -33,6 +33,12 @@ char*  plus_long_prefixe(char* str1,char* str2){
 }
 
 char*  complement(char* str1,char* str2){ 
+	/*
+	complement("test","tes")="t"
+	complement("tes","test")=""
+	complement("iphone","iphaune")="one"
+	complement("iphaune","iphone")="aune"
+	*/
 	int len_max = max(strlen(str1),strlen(str2))+1;
 	int j;
 	int i=0;

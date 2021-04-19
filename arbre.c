@@ -39,12 +39,14 @@ void insert_mot_arbre(Arbre *racine, char* suffixe){
 			if (strlen(plus_long_prefixe((*racine)->noeuds[i]->suffixe , suffixe )) != 0){
 				
 				c++;
+
 				old_suffixe = (char*)malloc(MAX_LEN*sizeof(char));
 				strcpy(old_suffixe,(*racine)->noeuds[i]->suffixe);
 
 				//cas d'égalité
 				if (strcmp(suffixe,old_suffixe)==0){
 					(*racine)->noeuds[i]->complet=TRUE;
+					free(old_suffixe);
 					break;
 				}
 
@@ -55,11 +57,12 @@ void insert_mot_arbre(Arbre *racine, char* suffixe){
 						k++; //compteur pour trouver un noeud nul pour créer la nouvelle arborescence
 					}	
 					cree_arbre(&(*racine)->noeuds[k],suffixe);
-					(*racine)->noeuds[k]->complet = TRUE;
 
 					(*racine)->noeuds[k]->noeuds[0]=(*racine)->noeuds[i];
+					(*racine)->noeuds[k]->complet = TRUE;
 					strcpy((*racine)->noeuds[k]->noeuds[0]->suffixe,complement(old_suffixe,suffixe)) ;
 					(*racine)->noeuds[i]=NULL;
+					free(old_suffixe);
 					break;
 				}
 
@@ -67,6 +70,7 @@ void insert_mot_arbre(Arbre *racine, char* suffixe){
 				if(strlen(complement(old_suffixe,suffixe))==0){
 						insert_mot_arbre(&(*racine)->noeuds[i], complement(suffixe,old_suffixe));
 						//(*racine)->noeuds[i]->complet=TRUE;
+						free(old_suffixe);
 						break;
 				}
 				
@@ -76,16 +80,19 @@ void insert_mot_arbre(Arbre *racine, char* suffixe){
 					while((*racine)->noeuds[k]!=NULL){
 						k++;
 					}	
-					cree_arbre(&(*racine)->noeuds[k],plus_long_prefixe((*racine)->noeuds[i]->suffixe , suffixe ));
+					cree_arbre( &(*racine)->noeuds[k] , plus_long_prefixe( (*racine)->noeuds[i]->suffixe , suffixe ));
 					(*racine)->noeuds[k]->complet=FALSE;
-					
 					(*racine)->noeuds[k]->noeuds[0]=(*racine)->noeuds[i];
 					strcpy((*racine)->noeuds[k]->noeuds[0]->suffixe,complement(old_suffixe,suffixe)) ;
+
 					(*racine)->noeuds[i]=NULL;
+
 					cree_arbre(&(*racine)->noeuds[k]->noeuds[1],complement(suffixe,old_suffixe));
+					(*racine)->noeuds[k]->noeuds[1]->complet=TRUE;
+					free(old_suffixe);
 					break;
 				}
-				free(old_suffixe);
+				
 			}
 			//Si le noeud est incompatible et non nul on ne fait rien
 		}
@@ -133,6 +140,7 @@ void display_arbre(Arbre *racine, char* str){
 	}
 }
 
+
 void display_all_suffixe(Arbre *racine){
 	int i=0;
 	for(i=0;i<MAX_LEN;i++){
@@ -152,7 +160,6 @@ void rempli_arbre(Arbre *racine,char* nom_fichier){
     while ( (fgets(ligne, MAX_LEN,fichier) != NULL) && (i<20000000)){ /*fin de fichier non atteinte*/
 		i++;
 		ligne[strcspn(ligne,"\n")]=0;
-		//printf("Ligne %i : %s\n",i,ligne);
 		insert_mot_arbre(racine,ligne);
 	}
 }

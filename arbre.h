@@ -1,7 +1,7 @@
 #ifndef _ARBRE_H
 #define _ARBRE_
 
-#define MAX_LEN 100
+#define MAX_LEN 30
 
 
 struct noeud
