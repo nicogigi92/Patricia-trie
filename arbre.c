@@ -85,17 +85,16 @@ void insert_mot_arbre(Arbre *racine, char* suffixe){
 					cree_arbre(&(*racine)->noeuds[k]->noeuds[1],complement(suffixe,old_suffixe));
 					break;
 				}
-			
-
 				free(old_suffixe);
 			}
-
-			else
-				if(i<MAX_LEN-1){
-					j=i+1; //j-1 correspond au dernier noeud non nul incompatible. On s'assure que j ne sera pas trop grand.
-				}
-			}
+			//Si le noeud est incompatible et non nul on ne fait rien
 		}
+		//Si le noeud est nul, on enregistre sa position
+		else{
+					j=i; //j correspond alors à une place libre dans le cas ou aucun noeud compatible est trouvé
+			}
+	}
+	//si on a pas trouvé de noeud compatible, on place le suffixe dans un noeud libre
 	if(c==0){
 		cree_arbre(&(*racine)->noeuds[j],suffixe);
 		(*racine)->noeuds[j]->complet=TRUE;
@@ -166,19 +165,19 @@ int recherche(Arbre *racine,char* mot){
 		if((*racine)->noeuds[i]!=NULL){
 			suffixe = (char*)malloc(MAX_LEN*sizeof(char));
 			strcpy(suffixe,(*racine)->noeuds[i]->suffixe);
-			printf("mot : %s suffixe : %s, comp :%i Complet : %i\n",mot,suffixe,(strcmp(mot,suffixe)),(*racine)->noeuds[i]->complet);
+			//printf("mot : %s suffixe : %s, comp :%i Complet : %i\n",mot,suffixe,(strcmp(mot,suffixe)),(*racine)->noeuds[i]->complet);
 			if ((strcmp(mot,suffixe)==0)&&((*racine)->noeuds[i]->complet==TRUE)){
-				printf("Le mot est dans l'arbre\n");
+				//printf("Le mot est dans l'arbre\n");
 				return TRUE;
 			}
 			else if ((strcmp(mot,suffixe)==0)&&((*racine)->noeuds[i]->complet==FALSE)){
-				printf("Le mot est dans l'arbre\n");
+				//printf("Le mot est dans l'arbre\n");
 				return FALSE;
 			}	
 			else{
 				if (strlen(plus_long_prefixe(suffixe, mot)) != 0){
-					printf("Partie commune : %s\n",plus_long_prefixe(suffixe, mot));
-					recherche(&(*racine)->noeuds[i],complement(mot,suffixe));
+					//printf("Partie commune : %s\n",plus_long_prefixe(suffixe, mot));
+					return recherche(&(*racine)->noeuds[i],complement(mot,suffixe));
 				}
 			}
 		}
