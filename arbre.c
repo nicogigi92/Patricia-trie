@@ -167,23 +167,18 @@ void rempli_arbre(Arbre *racine,char* nom_fichier){
 int recherche(Arbre *racine,char* mot){
 	int i;
 	char* suffixe;
-
 	for(i=0;i<MAX_LEN;i++){
 		if((*racine)->noeuds[i]!=NULL){
 			suffixe = (char*)malloc(MAX_LEN*sizeof(char));
 			strcpy(suffixe,(*racine)->noeuds[i]->suffixe);
-			//printf("mot : %s suffixe : %s, comp :%i Complet : %i\n",mot,suffixe,(strcmp(mot,suffixe)),(*racine)->noeuds[i]->complet);
 			if ((strcmp(mot,suffixe)==0)&&((*racine)->noeuds[i]->complet==TRUE)){
-				//printf("Le mot est dans l'arbre\n");
 				return TRUE;
 			}
 			else if ((strcmp(mot,suffixe)==0)&&((*racine)->noeuds[i]->complet==FALSE)){
-				//printf("Le mot est dans l'arbre\n");
 				return FALSE;
 			}	
 			else{
 				if (strlen(plus_long_prefixe(suffixe, mot)) != 0){
-					//printf("Partie commune : %s\n",plus_long_prefixe(suffixe, mot));
 					return recherche(&(*racine)->noeuds[i],complement(mot,suffixe));
 				}
 			}

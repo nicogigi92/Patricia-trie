@@ -21,7 +21,6 @@ int main(int argc, char *argv[]){
 		i++;
 		ligne[strcspn(ligne,"\n")]=0;
 		if (recherche(&arbre,ligne)==1){
-			printf("%s\n",ligne);
 			c++;
 		}
 	}
